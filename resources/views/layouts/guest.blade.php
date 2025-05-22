@@ -1,11 +1,11 @@
 <!doctype html>
 <html lang="es" data-layout="vertical" data-topbar="light" data-sidebar="dark" data-sidebar-size="lg" data-sidebar-image="none">
 <head>
-    <title>AnderCode | Reservas Acceso</title>
+    <title>Sistema de Gestión de Calendario</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <meta content="Curso de Sistema de Reservas - AnderCode" name="description" />
+    <meta content="S" name="description" />
     <meta content="Themesbrand" name="author" />
     <!-- App favicon -->
     <link rel="shortcut icon" href="{{ asset('assets/images/Logo_blanco-1200px.png') }}">
@@ -46,7 +46,7 @@
                     <div class="col-lg-12">
                         <div class="text-center">
                             <p class="mb-0 text-muted">&copy;
-                                <script>document.write(new Date().getFullYear())</script> AnderCode. Sistema de Reservas <i class="mdi mdi-heart text-danger"></i>
+                                <script>document.write(new Date().getFullYear())</script> Sistema de Gestion de calendario <i class="mdi mdi-heart text-danger"></i>
                             </p>
                         </div>
                     </div>

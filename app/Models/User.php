@@ -21,7 +21,7 @@ class User extends Authenticatable
      */
 
     protected $dates = ['deleted_at'];
-    
+
     protected $fillable = [
         'email',
         'password',
@@ -64,9 +64,13 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Role::class,'rol_id');
     }
-    
+
     public function consultasReservas()
     {
         return $this->hasMany(Reservation::class,'consulta_id');
+    }
+    public function getNombreCompletoAttribute()
+    {
+        return "{$this->nombres} {$this->apellidos}";
     }
 }

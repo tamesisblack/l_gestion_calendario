@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="es" data-layout="vertical" data-topbar="light" data-sidebar="dark" data-sidebar-size="lg" data-sidebar-image="none">
 <head>
-    <title>AnderCode | Reservas</title>
+    <title>Sistema de Gestión de Calendario</title>
     <meta charset="utf-8" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">

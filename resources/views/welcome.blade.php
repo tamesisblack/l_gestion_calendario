@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8" />
-    <title>Reservas | AnderCode</title>
+    <title>Sistema de Gestión de Calendario</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- App favicon -->
     <link rel="shortcut icon" href="{{ asset('assets/images/Logo_blanco-1200px.png') }}">
@@ -402,42 +402,8 @@
 
                         <div>
                             <p class="copy-rights mb-0">
-                                <script> document.write(new Date().getFullYear()) </script> © AnderCode - Sistema de Reservas
+                                <script> document.write(new Date().getFullYear()) </script> Sistema de Gestión de Calendario
                             </p>
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="text-sm-end mt-3 mt-sm-0">
-                            <ul class="list-inline mb-0 footer-social-link">
-                                <li class="list-inline-item">
-                                    <a href="https://web.facebook.com/Ander.Codex" class="avatar-xs d-block">
-                                        <div class="avatar-title rounded-circle">
-                                            <i class="ri-facebook-fill"></i>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li class="list-inline-item">
-                                    <a href="https://github.com/Anders87x" class="avatar-xs d-block">
-                                        <div class="avatar-title rounded-circle">
-                                            <i class="ri-github-fill"></i>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li class="list-inline-item">
-                                    <a href="https://www.linkedin.com/in/andercode/" class="avatar-xs d-block">
-                                        <div class="avatar-title rounded-circle">
-                                            <i class="ri-linkedin-fill"></i>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li class="list-inline-item">
-                                    <a href="https://anderson-bastidas.com" class="avatar-xs d-block">
-                                        <div class="avatar-title rounded-circle">
-                                            <i class="ri-dribbble-line"></i>
-                                        </div>
-                                    </a>
-                                </li>
-                            </ul>
                         </div>
                     </div>
                 </div>

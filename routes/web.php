@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\AreaController;
+use App\Http\Controllers\CordinadorAreaController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
@@ -68,3 +70,7 @@ Route::get('/reservations/{id}', [ReservationController::class, 'show']);
 
 Route::get('/reservations/evidencias/{iduser}/{fecha}', [ReservationController::class, 'reservationEvidences'])->name('reservations.evidencias');
 require __DIR__.'/auth.php';
+
+Route::resource('areas', AreaController::class);
+Route::resource('cordinadores', CordinadorAreaController::class);
+

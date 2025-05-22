@@ -35,7 +35,7 @@
                         </div>
                     </div>
 
-                    <div class="col-xxl-3 col-md-6">
+                    {{-- <div class="col-xxl-3 col-md-6">
                         <div>
                             <label for="consulta_id" class="form-label">{{ __('Consultor') }}</label>
                             <select class="form-select @error('consulta_id') is-invalid @enderror" id="consulta_id" name="consulta_id" required>
@@ -50,7 +50,7 @@
                                 </span>
                             @enderror
                         </div>
-                    </div>
+                    </div> --}}
 
                     <div class="col-xxl-3 col-md-6">
                         <div>

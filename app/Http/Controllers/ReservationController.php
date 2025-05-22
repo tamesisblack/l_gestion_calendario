@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CordinadorArea;
 use App\Models\User;
 use App\Models\Reservation;
 use App\Models\ReservationDetail;
@@ -54,15 +55,14 @@ class ReservationController extends Controller{
         // Validación de los datos recibidos
         $request->validate([
             'user_id' => 'required|exists:users,id',
-            'consulta_id' => 'required|exists:users,id',
+            'consulta_id' => 'nullable|exists:users,id',
             'reservation_date' => 'required|date',
             'start_time' => 'required|date_format:H:i|after_or_equal:09:00|before_or_equal:15:00',
             'end_time' => 'required|date_format:H:i|before_or_equal:15:00',
             'reservation_status' => 'required|in:pendiente,confirmada,cancelada',
-            // 'payment_status' => 'required|in:pendiente,pagado,fallido',
-            // 'total_amount' => 'required|numeric|min:0',
             'foto_evidencia' => 'required|image|mimes:jpg,jpeg,png|max:2048',
         ]);
+
 
         // Almacenar la foto si fue proporcionada
         $fotoPath = null;
@@ -78,8 +78,6 @@ class ReservationController extends Controller{
             'start_time' => $request->start_time,
             'end_time' => $request->end_time,
             'reservation_status' => $request->reservation_status,
-            // 'payment_status' => $request->payment_status,
-            // 'total_amount' => $request->total_amount,
             'foto_evidencia' => $fotoPath,
         ]);
 
@@ -293,36 +291,66 @@ class ReservationController extends Controller{
         return response()->json($events);
     }
 
-    public function getReservationsAsesor(){
-
+    public function getReservationsAsesor() {
         $consultantId = Auth::user()->id;
 
-        $reservations = Reservation::where('consulta_id',$consultantId)->get();
+        $areas = CordinadorArea::where('user_id', $consultantId)->pluck('area_id');
+
+        $reservations = Reservation::whereIn('area_id', $areas)
+            ->with('user')
+            ->orderBy('start_time') // Para que la primera hora sea la que se use
+            ->get();
+
+        $grouped = [];
+
+        foreach ($reservations as $reservation) {
+            $key = $reservation->user_id . '|' . $reservation->reservation_date;
+
+            if (!isset($grouped[$key])) {
+                $grouped[$key] = [
+                    'user_id' => $reservation->user_id,
+                    'reservation_date' => $reservation->reservation_date,
+                    'count' => 0,
+                    'start' => $reservation->start_time,
+                    'end' => $reservation->end_time,
+                    'statuses' => [],
+                    'user' => $reservation->user,
+                ];
+            }
+
+            $grouped[$key]['count'] += 1;
+            $grouped[$key]['statuses'][] = $reservation->reservation_status;
+        }
 
         $events = [];
-        foreach($reservations as $reservation){
-            $color = '#28a745';
-            $bordercolor = '#28a745';
 
-            if($reservation->reservation_status === 'pendiente'){
-                $color = '#ffc107';
-                $bordercolor = '#ffc107';
-            }elseif($reservation->reservation_status === 'cancelada'){
+        foreach ($grouped as $data) {
+            $statusList = $data['statuses'];
+
+            // Priorizar colores: cancelada > pendiente > aprobada
+            if (in_array('cancelada', $statusList)) {
                 $color = '#dc3545';
-                $bordercolor = '#dc3545';
+            } elseif (in_array('pendiente', $statusList)) {
+                $color = '#ffc107';
+            } else {
+                $color = '#28a745';
             }
 
             $events[] = [
-                'title' => 'Reserva con '. $reservation->user->nombres .' '. $reservation->user->apellidos,
-                'start' => $reservation->reservation_date.'T'.$reservation->start_time,
-                'end' => $reservation->reservation_date.'T'.$reservation->end_time,
+                'user_id' => $data['user_id'],
+                'reservation_date' => $data['reservation_date'],
+                'title' => "(" . $data['count'] . ") " . $data['user']->nombres . ' ' . $data['user']->apellidos,
+                'start' => $data['reservation_date'] . 'T' . $data['start'],
+                'end' => $data['reservation_date'] . 'T' . $data['end'],
                 'backgroundColor' => $color,
-                'borderColor' => $bordercolor,
+                'borderColor' => $color,
             ];
         }
 
         return response()->json($events);
     }
+
+
 
     public function getReservationsCliente(){
 
@@ -342,11 +370,21 @@ class ReservationController extends Controller{
                 $color = '#dc3545';
                 $bordercolor = '#dc3545';
             }
-
+            $countUploadImages = Reservation::where('user_id', $reservation->user_id)
+            ->where('reservation_date', $reservation->reservation_date)
+            ->count();
             $events[] = [
-                'title' => 'Reserva con '. $reservation->consultant->nombres .' '. $reservation->consultant->apellidos,
-                'start' => $reservation->reservation_date.'T'.$reservation->start_time,
-                'end' => $reservation->reservation_date.'T'.$reservation->end_time,
+                // 'title' => 'Reserva con '. $reservation->consultant->nombres .' '. $reservation->consultant->apellidos,
+                // 'start' => $reservation->reservation_date.'T'.$reservation->start_time,
+                // 'end' => $reservation->reservation_date.'T'.$reservation->end_time,
+                // 'backgroundColor' => $color,
+                // 'borderColor' => $bordercolor,
+                  // Contar cuántas reservas tiene ese usuario ese día
+
+
+                'title' => "($countUploadImages) " . $reservation->user->nombres . ' ' . $reservation->user->apellidos,
+                'start' => $reservation->reservation_date . 'T' . $reservation->start_time,
+                'end' => $reservation->reservation_date . 'T' . $reservation->end_time,
                 'backgroundColor' => $color,
                 'borderColor' => $bordercolor,
             ];
@@ -435,7 +473,7 @@ class ReservationController extends Controller{
 
             $mail->CharSet = 'UTF-8';
 
-            $mail->Subject = 'Confirmacion de Reserva - AnderCode';
+            $mail->Subject = 'Confirmacion de Sistema de Gestión de Calendario';
 
             $html = View::make('emails.reserva',[
                 'userName' => $user->nombres .' '. $user->apellidos,
@@ -467,7 +505,7 @@ class ReservationController extends Controller{
             "Hora de Fin: {$reservation->end_time}\n".
             "Costo Total: {$reservation->total_amount}\n".
             "Gracias por elegir nuestros servicios.\n".
-            "AnderCode.\n";
+            "Sistema de Gestión de Calendario.\n";
     }
 
     // Método para enviar un mensaje de WhatsApp

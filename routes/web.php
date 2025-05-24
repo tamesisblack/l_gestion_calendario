@@ -73,4 +73,6 @@ require __DIR__.'/auth.php';
 
 Route::resource('areas', AreaController::class);
 Route::resource('cordinadores', CordinadorAreaController::class);
+Route::get('/areas/{area}/cordinadores', [AreaController::class, 'getCordinadores'])->name('areas.cordinadores');
+
 

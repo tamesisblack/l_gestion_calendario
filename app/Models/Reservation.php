@@ -12,6 +12,7 @@ class Reservation extends Model
     protected $fillable = [
         'user_id',
         'consulta_id',
+        'area_id',
         'reservation_date',
         'start_time',
         'end_time',
@@ -34,5 +35,8 @@ class Reservation extends Model
         return $this->belongsTo(User::class,'consulta_id');
     }
 
-
+    public function area()
+    {
+        return $this->belongsTo(Area::class,'area_id');
+    }
 }

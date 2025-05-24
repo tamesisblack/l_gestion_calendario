@@ -4,7 +4,7 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-            <h4 class="mb-sm-0">Listado de Reservassss</h4>
+            <h4 class="mb-sm-0">Listado de Reserva</h4>
 
             <div class="page-title-right">
                 <ol class="breadcrumb m-0">
@@ -34,12 +34,11 @@
                                 #id
                             </th>
                             <th>Usuario</th>
+                            <th>Área</th>
                             <th>Consultor</th>
                             <th>Fecha</th>
                             <th>Hora Inicio</th>
                             <th>Hora Fin</th>
-                            <th>Estado del Pago</th>
-                            <th>Estado del Reserva</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
@@ -48,20 +47,16 @@
                         <tr>
                             <td>{{ $reservation->id }}</td>
                             <td>{{ $reservation->user->nombres }} {{ $reservation->user->apellidos }}</td>
-                            <td>{{ $reservation->consultant->nombres }} {{ $reservation->consultant->apellidos }}</td>
+                            <td>{{ $reservation->area ? $reservation->area->nombre_area : 'Área no asignada' }}</td>
+                            <td>
+                                {{ (!empty($reservation->consultant) && !empty($reservation->consultant->nombres) && !empty($reservation->consultant->apellidos))
+                                    ? $reservation->consultant->nombres . ' ' . $reservation->consultant->apellidos
+                                    : 'Coordinador no asignado' }}
+                            </td>
                             <td>{{ $reservation->reservation_date }}</td>
                             <td>{{ $reservation->start_time }}</td>
                             <td>{{ $reservation->end_time }}</td>
-                            <td>{{ $reservation->payment_status }}</td>
-                            <td>
-                                @if($reservation->reservation_status == 'cancelada')
-                                    <span class="badge bg-danger">cancelada</span>
-                                @elseif ($reservation->reservation_status == 'confirmada')
-                                    <span class="badge bg-success">confirmada</span>
-                                @else
-                                    <span class="badge bg-warning">pendiente</span>
-                                @endif
-                            </td>
+
                             <td>
                                 @if($reservation->reservation_status == 'cancelada')
                                     <button class="btn btn-warning btn-sm" disabled>Editar</button>

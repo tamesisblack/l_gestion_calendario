@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Area;
 use App\Models\CordinadorArea;
 use App\Models\User;
 use App\Models\Reservation;
@@ -23,7 +24,7 @@ class ReservationController extends Controller{
     //Método para mostrar todas las reservas
     public function index(){
         // Obtener todas las reservas con sus relaciones de usuario y consultor
-        $reservations = Reservation::with(['user', 'consultant'])->orderBy('id','desc')->get();
+        $reservations = Reservation::with(['user', 'consultant','area'])->orderBy('id','desc')->get();
         return view('reservations.index', compact('reservations'));
     }
 
@@ -59,7 +60,7 @@ class ReservationController extends Controller{
             'reservation_date' => 'required|date',
             'start_time' => 'required|date_format:H:i|after_or_equal:09:00|before_or_equal:15:00',
             'end_time' => 'required|date_format:H:i|before_or_equal:15:00',
-            'reservation_status' => 'required|in:pendiente,confirmada,cancelada',
+            // 'reservation_status' => 'required|in:pendiente,confirmada,cancelada',
             'foto_evidencia' => 'required|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
@@ -77,7 +78,7 @@ class ReservationController extends Controller{
             'reservation_date' => $request->reservation_date,
             'start_time' => $request->start_time,
             'end_time' => $request->end_time,
-            'reservation_status' => $request->reservation_status,
+            // 'reservation_status' => $request->reservation_status,
             'foto_evidencia' => $fotoPath,
         ]);
 
@@ -107,8 +108,9 @@ class ReservationController extends Controller{
 
         $users = User::where('rol_id', 3)->whereNull('deleted_at')->get();
         $consultants = User::where('rol_id', 2)->whereNull('deleted_at')->get();
+        $areas = Area::all();
 
-        return view('reservations.edit', compact('reservation', 'users', 'consultants'));
+        return view('reservations.edit', compact('reservation', 'users', 'consultants','areas'));
     }
 
     // Método para actualizar una reserva existente
@@ -116,13 +118,12 @@ class ReservationController extends Controller{
         // Validación de los datos recibidos
         $request->validate([
             'user_id' => 'required|exists:users,id',
-            'consulta_id' => 'required|exists:users,id',
+            'consulta_id' => 'nullable|exists:users,id',
+            'area_id' => 'nullable|exists:areas,id',
             'reservation_date' => 'required|date',
             'start_time' => 'required|date_format:H:i|after_or_equal:09:00|before_or_equal:15:00',
             'end_time' => 'required|date_format:H:i|before_or_equal:15:00',
-            'reservation_status' => 'required|in:pendiente,confirmada,cancelada',
-            'payment_status' => 'required|in:pendiente,pagado,fallido',
-            'total_amount' => 'required|numeric|min:0',
+
         ]);
 
         $reservation = Reservation::findOrFail($id);

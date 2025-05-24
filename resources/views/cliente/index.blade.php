@@ -4,7 +4,7 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-            <h4 class="mb-sm-0">Listado de Reservas22</h4>
+            <h4 class="mb-sm-0">Listado de Reservas</h4>
 
             <div class="page-title-right">
                 <ol class="breadcrumb m-0">
@@ -35,8 +35,8 @@
                             <th>Fecha</th>
                             <th>Hora Inicio</th>
                             <th>Hora Fin</th>
-                            <th>Estado del Pago</th>
-                            <th>Estado del Reserva</th>
+                            {{-- <th>Estado del Pago</th>
+                            <th>Estado del Reserva</th> --}}
                             <th>Foto Evidencia</th>
                             <th>Acciones</th>
                         </tr>
@@ -51,7 +51,7 @@
                             <td>{{ $reservation->reservation_date }}</td>
                             <td>{{ $reservation->start_time }}</td>
                             <td>{{ $reservation->end_time }}</td>
-                            <td>{{ $reservation->payment_status }}</td>
+                            {{-- <td>{{ $reservation->payment_status }}</td>
                             <td>
                                 @if($reservation->reservation_status == 'cancelada')
                                     <span class="badge bg-danger">cancelada</span>
@@ -60,7 +60,7 @@
                                 @else
                                     <span class="badge bg-warning">pendiente</span>
                                 @endif
-                            </td>
+                            </td> --}}
                             <td>
                                 <img src="{{ asset('storage/' . $reservation->foto_evidencia) }}" alt="Foto Evidencia" class="img-fluid rounded-circle" style="width: 50px; height: 50px;">
                             </td>

@@ -78,9 +78,20 @@
 
                 <li class="menu-title"><span>Administrador</span></li>
 
-                <li class="nav-item">
+                {{-- <li class="nav-item">
                     <a class="nav-link menu-link" href="{{ route('reservations.create') }}">
                         <i class="ri-dashboard-2-line"></i> <span>Nueva Reserva</span>
+                    </a>
+                </li> --}}
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="{{ route('areas.index') }}">
+                        <i class="ri-dashboard-2-line"></i> <span>Areas</span>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="{{ route('cordinadores.index') }}">
+                        <i class="ri-dashboard-2-line"></i> <span>Asignar cordinador a área</span>
                     </a>
                 </li>
 
@@ -96,17 +107,9 @@
                     </a>
                 </li>
 
-                <li class="nav-item">
-                    <a class="nav-link menu-link" href="{{ route('areas.index') }}">
-                        <i class="ri-dashboard-2-line"></i> <span>Areas</span>
-                    </a>
-                </li>
 
-                <li class="nav-item">
-                    <a class="nav-link menu-link" href="{{ route('cordinadores.index') }}">
-                        <i class="ri-dashboard-2-line"></i> <span>Asignar cordinador</span>
-                    </a>
-                </li>
+
+
                 {{-- <li class="nav-item">
                     <a class="nav-link menu-link" href="{{ route('reservations.pagos') }}">
                         <i class="ri-dashboard-2-line"></i> <span>Ver Pagos</span>

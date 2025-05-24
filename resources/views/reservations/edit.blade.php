@@ -3,165 +3,93 @@
 @section('content')
 <div class="row">
     <div class="col-12">
-        <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-            <h4 class="mb-sm-0">Editar Reserva</h4>
-
-            <div class="page-title-right">
-                <ol class="breadcrumb m-0">
-                    <li class="breadcrumb-item"><a href="javascript: void(0);">Reserva</a></li>
-                    <li class="breadcrumb-item active">Editar Reserva</li>
-                </ol>
-            </div>
-
-        </div>
+        <h4>Editar Reserva</h4>
     </div>
 </div>
 
 <div class="row">
     <div class="col-lg-12">
         <div class="card">
-            <div class="card-header align-items-center d-flex">
-                <h4 class="card-title mb-0 flex-grow-1">Modificar Reserva</h4>
-            </div>
             <div class="card-body">
-                <form class="row gy-1" method="POST" action="{{ route('reservations.update', $reservation->id) }}">
+                <form method="POST" action="{{ route('reservations.update', $reservation->id) }}">
                     @csrf
                     @method('PUT')
 
-                    <div class="col-xxl-3 col-md-6">
-                        <div>
-                            <label for="user_id" class="form-label">{{ __('Usuario') }}</label>
-                            <select class="form-select @error('user_id') is-invalid @enderror" id="user_id" name="user_id" required>
-                                <option value="">Seleccionar Usuario</option>
-                                @foreach ($users as $user )
-                                    <option value="{{ $user->id }}" {{ $user->id == $reservation->user_id ? 'selected' : '' }}>{{ $user->nombres }} {{ $user->apellidos }}</option>
+                    <div class="row gy-3">
+
+                        {{-- Usuario --}}
+                        <div class="col-md-4">
+                            <label for="user_id" class="form-label">Usuario</label>
+                            <select id="user_id" name="user_id" class="form-select" required>
+                                <option value="">Seleccionar usuario</option>
+                                @foreach ($users as $user)
+                                    <option value="{{ $user->id }}" {{ $user->id == $reservation->user_id ? 'selected' : '' }}>
+                                        {{ $user->nombres }} {{ $user->apellidos }}
+                                    </option>
                                 @endforeach
                             </select>
-                            @error('user_id')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message}}</strong>
-                                </span>
-                            @enderror
                         </div>
-                    </div>
 
-                    <div class="col-xxl-3 col-md-6">
-                        <div>
-                            <label for="consulta_id" class="form-label">{{ __('Consultor') }}</label>
-                            <select class="form-select @error('consulta_id') is-invalid @enderror" id="consulta_id" name="consulta_id" required>
-                                <option value="">Seleccionar Consultor</option>
-                                @foreach ($consultants as $consultant )
-                                    <option value="{{ $consultant->id }}" {{ $consultant->id == $reservation->consulta_id ? 'selected' : '' }}>{{ $consultant->nombres }} {{ $consultant->apellidos }}</option>
+                        {{-- Área --}}
+                        <div class="col-md-4">
+                            <label for="area_id" class="form-label">Área</label>
+                            <select id="area_id" name="area_id" class="form-select" required>
+                                <option value="">Seleccionar área</option>
+                                @foreach ($areas as $area)
+                                    <option value="{{ $area->id }}" {{ $area->id == $reservation->area_id ? 'selected' : '' }}>
+                                        {{ $area->nombre_area }}
+                                    </option>
                                 @endforeach
                             </select>
-                            @error('consulta_id')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message}}</strong>
-                                </span>
-                            @enderror
                         </div>
-                    </div>
 
-                    <div class="col-xxl-3 col-md-6">
-                        <div>
-                            <label for="reservation_date" class="form-label">{{ __('Fecha de Reserva') }}</label>
-                            <input type="date" class="form-control @error('reservation_date') is-invalid @enderror" id="reservation_date" name="reservation_date" value="{{ old('reservation_date', $reservation->reservation_date) }}" required>
-                            @error('reservation_date')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message}}</strong>
-                                </span>
-                            @enderror
-                        </div>
-                    </div>
-
-                    <div class="col-xxl-3 col-md-6">
-                        <div>
-                            <label for="start_time" class="form-label">{{ __('Hora de Inicio') }}</label>
-                            <select class="form-select @error('start_time') is-invalid @enderror" id="start_time" name="start_time" required>
-                                <option value="">Seleccionar una hora</option>
-                                <option value="09:00" {{ $reservation->start_time == '09:00' ? 'selected' : '' }}>09:00</option>
-                                <option value="10:00" {{ $reservation->start_time == '10:00' ? 'selected' : '' }}>10:00</option>
-                                <option value="11:00" {{ $reservation->start_time == '11:00' ? 'selected' : '' }}>11:00</option>
-                                <option value="12:00" {{ $reservation->start_time == '12:00' ? 'selected' : '' }}>12:00</option>
-                                <option value="13:00" {{ $reservation->start_time == '13:00' ? 'selected' : '' }}>13:00</option>
-                                <option value="14:00" {{ $reservation->start_time == '14:00' ? 'selected' : '' }}>14:00</option>
-                                <option value="15:00" {{ $reservation->start_time == '15:00' ? 'selected' : '' }}>15:00</option>
-                                <option value="16:00" {{ $reservation->start_time == '16:00' ? 'selected' : '' }}>16:00</option>
+                        {{-- Coordinador (se guarda como consulta_id) --}}
+                        <div class="col-md-4">
+                            <label for="consulta_id" class="form-label">Coordinador</label>
+                            <select id="consulta_id" name="consulta_id" class="form-select" required>
+                                <option value="">Seleccionar coordinador</option>
+                                @php
+                                    $cords = $areas->firstWhere('id', $reservation->area_id)?->cordinadores ?? collect();
+                                @endphp
+                                @foreach ($cords as $cord)
+                                    <option value="{{ $cord->id }}" {{ $cord->id == $reservation->consulta_id ? 'selected' : '' }}>
+                                        {{ $cord->nombres }} {{ $cord->apellidos }}
+                                    </option>
+                                @endforeach
                             </select>
-                            @error('start_time')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message}}</strong>
-                                </span>
-                            @enderror
                         </div>
-                    </div>
 
-                    <div class="col-xxl-3 col-md-6">
-                        <div>
-                            <label for="end_time" class="form-label">{{ __('Hora Fin') }}</label>
-                            <input type="text" class="form-control @error('end_time') is-invalid @enderror" id="end_time" name="end_time" value="{{ old('end_time', $reservation->end_time) }}" readonly>
-                            @error('end_time')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message}}</strong>
-                                </span>
-                            @enderror
+                        {{-- Fecha --}}
+                        <div class="col-md-4">
+                            <label for="reservation_date" class="form-label">Fecha</label>
+                            <input type="date" id="reservation_date" name="reservation_date" class="form-control"
+                                   value="{{ old('reservation_date', $reservation->reservation_date) }}" required>
                         </div>
-                    </div>
 
-                    <div class="col-xxl-3 col-md-6">
-                        <div>
-                            <label for="reservation_status" class="form-label">{{ __('Estado de la Reserva') }}</label>
-                            <select class="form-select @error('reservation_status') is-invalid @enderror" id="reservation_status" name="reservation_status" required>
-                                <option value="">Seleccionar un estado</option>
-                                <option value="pendiente" {{ $reservation->reservation_status == 'pendiente' ? 'selected' : '' }}>Pendiente</option>
-                                <option value="confirmada" {{ $reservation->reservation_status == 'confirmada' ? 'selected' : '' }}>Confirmada</option>
+                        {{-- Hora de inicio --}}
+                        <div class="col-md-4">
+                            <label for="start_time" class="form-label">Hora de Inicio</label>
+                            <select id="start_time" name="start_time" class="form-select" required>
+                                <option value="">Seleccionar hora</option>
+                                @for ($i = 9; $i <= 15; $i++)
+                                    @php $hora = sprintf('%02d:00', $i); @endphp
+                                    <option value="{{ $hora }}" {{ $reservation->start_time == $hora ? 'selected' : '' }}>
+                                        {{ $hora }}
+                                    </option>
+                                @endfor
                             </select>
-                            @error('reservation_status')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message}}</strong>
-                                </span>
-                            @enderror
                         </div>
-                    </div>
 
-                    <div class="col-xxl-3 col-md-6">
-                        <div>
-                            <label for="total_amount" class="form-label">{{ __('Total a pagar (USD)') }}</label>
-                            <input type="text" class="form-control @error('total_amount') is-invalid @enderror" id="total_amount" name="total_amount" value="{{ old('total_amount', $reservation->total_amount) }}" readonly>
-                            @error('total_amount')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message}}</strong>
-                                </span>
-                            @enderror
+                        {{-- Hora de fin --}}
+                        <div class="col-md-4">
+                            <label for="end_time" class="form-label">Hora Fin</label>
+                            <input type="text" id="end_time" name="end_time" class="form-control" value="{{ $reservation->end_time }}" readonly>
                         </div>
-                    </div>
 
-                    <div class="col-xxl-3 col-md-6">
-                        <div>
-                            <label for="payment_status" class="form-label">{{ __('Estado del Pago') }}</label>
-                            <select class="form-select @error('payment_status') is-invalid @enderror" id="payment_status" name="payment_status" required>
-                                <option value="">Seleccionar un estado</option>
-                                <option value="pendiente" {{ $reservation->payment_status == 'pendiente' ? 'selected' : '' }}>Pendiente</option>
-                                <option value="pagado" {{ $reservation->payment_status == 'pagado' ? 'selected' : '' }}>Pagado</option>
-                                <option value="fallido" {{ $reservation->payment_status == 'fallido' ? 'selected' : '' }}>Fallido</option>
-                            </select>
-                            @error('payment_status')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message}}</strong>
-                                </span>
-                            @enderror
-                        </div>
-                    </div>
-
-                    <div class="col-xxl-12 col-md-6">
-                        <div>
-                            <br>
-                            <a href="{{ route('reservations.index') }}" class="btn btn-danger">
-                                {{ __('Cancelar') }}
-                            </a>
-                            <button type="submit" class="btn btn-primary">
-                                {{ __('Guardar Cambios') }}
-                            </button>
+                        {{-- Botones --}}
+                        <div class="col-12 mt-3">
+                            <a href="{{ route('reservations.index') }}" class="btn btn-danger">Cancelar</a>
+                            <button type="submit" class="btn btn-primary">Guardar Cambios</button>
                         </div>
                     </div>
                 </form>
@@ -173,31 +101,55 @@
 
 @push('scripts')
 <script>
-    const today = new Date().toISOString().split('T')[0];
-    document.getElementById('reservation_date').setAttribute('min',today);
+    // const today = new Date().toISOString().split('T')[0];
+    // document.getElementById('reservation_date').setAttribute('min', today);
 
-    const pricePerHour = 50; // Define el precio por hora
-
-    document.getElementById('start_time').addEventListener('change', function() {
+    // Calcular hora fin
+    document.getElementById('start_time').addEventListener('change', function () {
         const startTime = this.value;
-
         if (startTime) {
-            // Convertir la hora de inicio a un objeto Date
-            const startDate = new Date(`1970-01-01T${startTime}:00`);
-            // Añadir una hora
-            startDate.setHours(startDate.getHours() + 1);
-            // Formatear la nueva hora como HH:MM
-            const endTime = startDate.toTimeString().slice(0, 5);
-            // Establecer el valor de end_time
-            document.getElementById('end_time').value = endTime;
-
-            // Calcular el total (en este caso siempre será 1 hora, pero puedes ajustar según el tiempo)
-            const total = pricePerHour; // Siempre será 1 hora, así que multiplica por el precio
-            document.getElementById('total_amount').value = total.toFixed(2); // Actualizar el total
+            const [h, m] = startTime.split(':');
+            const endHour = parseInt(h) + 1;
+            document.getElementById('end_time').value = `${String(endHour).padStart(2, '0')}:${m}`;
         } else {
-            // Limpiar el campo end_time si no se selecciona una hora
             document.getElementById('end_time').value = "";
-            document.getElementById('total_amount').value = "";
+        }
+    });
+
+    // Cargar coordinadores al cambiar de área
+    document.getElementById('area_id').addEventListener('change', function () {
+        const areaId = this.value;
+        const select = document.getElementById('consulta_id');
+        select.innerHTML = '<option value="">Cargando coordinadores...</option>';
+
+        if (areaId) {
+            fetch(`/areas/${areaId}/cordinadores`)
+                .then(res => res.json())
+                .then(data => {
+                    select.innerHTML = '<option value="">Seleccionar coordinador</option>';
+                    data.forEach(c => {
+                        const opt = document.createElement('option');
+                        opt.value = c.id;
+                        opt.textContent = `${c.nombres} ${c.apellidos}`;
+                        select.appendChild(opt);
+                    });
+                })
+                .catch(() => {
+                    select.innerHTML = '<option value="">Error al cargar</option>';
+                });
+        } else {
+            select.innerHTML = '<option value="">Seleccione un área primero</option>';
+        }
+    });
+
+    // Validar que si hay área debe haber coordinador (consulta_id)
+    document.querySelector('form').addEventListener('submit', function (e) {
+        const area = document.getElementById('area_id').value;
+        const consulta = document.getElementById('consulta_id').value;
+        if (area && !consulta) {
+            e.preventDefault();
+            alert('Debe seleccionar un coordinador para el área elegida.');
+            document.getElementById('consulta_id').focus();
         }
     });
 </script>

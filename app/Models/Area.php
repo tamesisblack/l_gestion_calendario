@@ -13,4 +13,8 @@ class Area extends Model
     protected $fillable = [
         'nombre_area',
     ];
+    public function cordinadores()
+    {
+        return $this->belongsToMany(User::class, 'cordinador_areas', 'area_id', 'user_id')->where('estado', 1);
+    }
 }

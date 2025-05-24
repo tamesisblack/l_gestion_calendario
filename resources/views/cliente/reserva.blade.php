@@ -98,7 +98,7 @@
                         </div>
                     </div>
 
-                    <div class="col-xxl-3 col-md-6">
+                    {{-- <div class="col-xxl-3 col-md-6">
                         <div>
                             <label for="reservation_status" class="form-label">{{ __('Estado de la Reserva') }}</label>
                             <select class="form-select @error('reservation_status') is-invalid @enderror" id="reservation_status" name="reservation_status" required>
@@ -112,7 +112,7 @@
                                 </span>
                             @enderror
                         </div>
-                    </div>
+                    </div> --}}
 
                     <div class="col-xxl-3 col-md-6">
                         <div>

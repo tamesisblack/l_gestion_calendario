@@ -60,4 +60,12 @@ class AreaController extends Controller
 
         return redirect()->route('areas.index')->with('success', 'Área eliminada correctamente.');
     }
+    public function getCordinadores($areaId)
+    {
+        $area = Area::with(['cordinadores' => function ($q) {
+            $q->where('estado', 1);
+        }])->findOrFail($areaId);
+
+        return response()->json($area->cordinadores);
+    }
 }

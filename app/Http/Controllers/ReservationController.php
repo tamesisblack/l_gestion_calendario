@@ -295,9 +295,13 @@ class ReservationController extends Controller{
     public function getReservationsAsesor() {
         $consultantId = Auth::user()->id;
 
-        $areas = CordinadorArea::where('user_id', $consultantId)->pluck('area_id');
+        // $areas = CordinadorArea::where('user_id', $consultantId)->pluck('area_id');
 
-        $reservations = Reservation::whereIn('area_id', $areas)
+        // $reservations = Reservation::whereIn('area_id', $areas)
+        //     ->with('user')
+        //     ->orderBy('start_time') // Para que la primera hora sea la que se use
+        //     ->get();
+        $reservations = Reservation::where('consulta_id', $consultantId)
             ->with('user')
             ->orderBy('start_time') // Para que la primera hora sea la que se use
             ->get();

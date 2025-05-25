@@ -58,6 +58,19 @@
                             <span class="text-start ms-xl-2">
                                 <span class="d-none d-xl-inline-block ms-1 fw-medium user-name-text">{{ Auth::user()->nombres }} {{ Auth::user()->apellidos }}</span>
                                 <span class="d-none d-xl-block ms-1 fs-12 text-muted user-name-sub-text">{{ Auth::user()->email }}</span>
+                                {{-- Mostrar rol del usuario --}}
+                                <span class="d-none d-xl-block ms-1 fs-12 text-muted user-name-sub-text">
+                                    Rol:
+                                    @if(Auth::user()->rol_id == 1)
+                                        Administrador
+                                    @elseif(Auth::user()->rol_id == 2)
+                                        Coordinador
+                                    @elseif(Auth::user()->rol_id == 3)
+                                        Usuario
+                                    @else
+                                        Rol desconocido
+                                    @endif
+                                </span>
                             </span>
                         </span>
                     </button>

@@ -29,7 +29,7 @@
         <nav class="navbar navbar-expand-lg navbar-landing fixed-top" id="navbar">
             <div class="container">
                 <a class="navbar-brand" href="index.html">
-                    <img src="{{ asset('assets/images/Logo_color2-1200px.PNG') }}" class="card-logo card-logo-dark" alt="logo dark" height="90">
+                    <img src="{{ asset('assets/images/Logo_color-1200px.png') }}" class="card-logo card-logo-dark" alt="logo dark" height="90">
                     <img src="{{ asset('assets/images/Logo_color2-1200px.PNG') }}" class="card-logo card-logo-light" alt="logo light" height="90">
                 </a>
                 <button class="navbar-toggler py-0 fs-20 text-body" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
